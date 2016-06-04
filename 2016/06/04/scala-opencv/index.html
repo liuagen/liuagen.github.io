@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="OS:Ubuntu 14.04
 1.安装以来软件sudo apt-get install build-essential python-dev cmake ant
-2.到opencv（http://opencv.org/）下载源文件3.新建一个build文件夹cd ~/opencv 
+2.到opencv(http://opencv.org/)下载源文件3.新建一个build文件夹cd ~/opencv 
 mkdir build 
 cd build4.配置configcmake -D CMAKE_BUILD_TYPE=">
 <meta property="og:type" content="article">
@@ -16,15 +16,15 @@ cd build4.配置configcmake -D CMAKE_BUILD_TYPE=">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="OS:Ubuntu 14.04
 1.安装以来软件sudo apt-get install build-essential python-dev cmake ant
-2.到opencv（http://opencv.org/）下载源文件3.新建一个build文件夹cd ~/opencv 
+2.到opencv(http://opencv.org/)下载源文件3.新建一个build文件夹cd ~/opencv 
 mkdir build 
 cd build4.配置configcmake -D CMAKE_BUILD_TYPE=">
-<meta property="og:updated_time" content="2016-06-04T08:53:14.279Z">
+<meta property="og:updated_time" content="2016-06-04T08:58:17.667Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="scala-opencv">
 <meta name="twitter:description" content="OS:Ubuntu 14.04
 1.安装以来软件sudo apt-get install build-essential python-dev cmake ant
-2.到opencv（http://opencv.org/）下载源文件3.新建一个build文件夹cd ~/opencv 
+2.到opencv(http://opencv.org/)下载源文件3.新建一个build文件夹cd ~/opencv 
 mkdir build 
 cd build4.配置configcmake -D CMAKE_BUILD_TYPE=">
   
@@ -64,9 +64,9 @@ cd build4.配置configcmake -D CMAKE_BUILD_TYPE=">
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
@@ -99,7 +99,7 @@ cd build4.配置configcmake -D CMAKE_BUILD_TYPE=">
       
         <p>OS:Ubuntu 14.04</p>
 <p>1.安装以来软件<br><code>sudo apt-get install build-essential python-dev cmake ant</code></p>
-<p>2.到opencv（<a href="http://opencv.org/）下载源文件" target="_blank" rel="external">http://opencv.org/）下载源文件</a><br>3.新建一个build文件夹<br><code>cd ~/opencv 
+<p>2.到opencv(<a href="http://opencv.org/)下载源文件" target="_blank" rel="external">http://opencv.org/)下载源文件</a><br>3.新建一个build文件夹<br><code>cd ~/opencv 
 mkdir build 
 cd build</code><br>4.配置config<br><code>cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -DBUILD_TESTS=OFF ..</code></p>
 <p>5.make -j8<br>6.sudo make install<br>7.在build/bin目录下有opencv-2413.jar文件夹和在build/lib文件夹下有opencv_2413.so文件。</p>
@@ -112,11 +112,88 @@ cd build</code><br>4.配置config<br><code>cmake -D CMAKE_BUILD_TYPE=RELEASE -D 
 <li>@param C 结果矩阵</li>
 <li>@return 矩阵C<br><em>/<br>public Mat matMul(Mat A, Mat B, Mat C)<br>{<br>Core.gemm(A, B, 1.0, Mat.zeros(A.size(), A.type()), 0.0, C);<br>return C;<br>}<br>这个方法是有文档的，不说啥了，目前还没有找到其他更好的方法。注意Mat类里还有dot()方法和cross()方法，都是给向量准备的，一个点乘，一个叉乘，其中叉乘还只能是三元素的向量。<br>(3) Java矩阵类的粗浅解析<br>我的理解Java矩阵实际上是两个部分。一个部分是Java的矩阵说明，包括尺寸，通道数，数据类型等；另一部分是实际存储数据的区域，在Java中这部分应该是用JNI调用其C++版本里的功能实现的，所以需要create和release。因此在做矩阵复制，赋值，转换等的各种操作的时候，有的时候是完整的创建了一个新的对象，有的时候只是创建了一个Java头，数据仍然存储在原来的地方没动，所以就有可能我们创建了好多个Mat对象，而实际存储的区域可能没那么多，会有多个Mat对象引用同一块数据存储区域。release方法实际上内部也有一个类似计数的变量，每次调用release的时候就会将这个变量减一，用这种方法来保证在合适的时候释放内存。所以这么说适时的调用release还是很重要的。但实际上什么时候应该release确实是个难题。我感觉一个标准是，谁new的对象，谁就负责release。在函数内部创建的矩阵对象，当做返回值的，必须要告诉调用者去release。<br>（4）矩阵元素的读取和存储<br>Java里读取矩阵的元素和改变某位置元素的值非常麻烦。对于C++而言，A(0,0)就可以直接取出（0,0）的值，同时也可以直接赋值。Java专门有这么两个方法，就是put()和get()。例如：<br>double[] x = A.get(0, 0)<br>这个操作可以获得（0,0）位置上的元素的值。为什么是返回的数组呢？因为OpenCV的矩阵可以是多维的，也就是在（0,0）位置上的值可以有多个通道（典型的例子是图像，其元素可能是3个值的数组（R,G,B)或者4个值的数组），所以返回值是数组。对于单通道的数据类型的矩阵而言，x[0]就是它的值。<br>A.put(0, 0, 1.0)<br>这个操作将（0,0）的值设置为1.0。当然本之上也应该是一个数组的，因为这里Java定义为可变数量参数，所以也可以只输入一个1.0。<br>但是这样的操作太麻烦了，大家可以想象一下最简单的常用的4</em>3矩阵如果这么赋起值来，那出错的概率是杠杠的。<br>还有一个办法就是把矩阵先转换为数组，然后进行操作，操作完毕后再转换会矩阵。也就是用数组作为中转，因为Java中操作数组还是很容易的。<br>Mat没有提供一个专为数组的方法，只能自己写一个了。其实也很简单，还是用的上面的两个方法。<br>double[] value = new double[9];<br>A.get(0,0, value); //从（0,0）位置开始读取数据来填充数组，一直到数组满或者矩阵结尾<br>或者<br>double[] value = new double[]{1,2,3,4,5,6,7,8,9};<br>A.put(0,0,value); //从（0,0）位置开始填充数组里的数据，一直到数组结束<br>很方便吧。注意计算好数组的大小。用这种方法也可以修改矩阵的部分数据。</li>
 </ul>
+<p>OpenCV 3.0.0 java API:<br><a href="http://docs.opencv.org/java/3.0.0/" target="_blank" rel="external">http://docs.opencv.org/java/3.0.0/</a></p>
+<p><a href="http://docs.opencv.org/3.1.0/d3/d63/classcv_1_1Mat.html#gsc.tab=0" target="_blank" rel="external">http://docs.opencv.org/3.1.0/d3/d63/classcv_1_1Mat.html#gsc.tab=0</a></p>
+<p>Mat:</p>
+<p>静态方法:<br>static Mat diag(Mat d)                                               // 对角矩阵 单列<br>static Mat eye(int rows, int cols, int type)                 // 构造单位矩阵形状的矩阵，可以不是方阵<br>static Mat eye(Size size, int type)                              // 构造单位矩阵形状的矩阵，可以不是方阵<br>static Mat ones(int rows, int cols, int type)               // 构造全是1的矩阵<br>static Mat ones(Size size, int type)                            // 构造全是1的矩阵<br>static Mat zeros(int rows, int cols, int type)              // 构造全是0的矩阵<br>static Mat zeros(Size size, int type)                           // 构造全是0的矩阵</p>
+<p>构造方法：<br>Mat()<br>Mat(int rows, int cols, int type)<br>Mat(int rows, int cols, int type, Scalar s)<br>Mat(long addr)<br>Mat(Mat m, Range rowRange)<br>Mat(Mat m, Range rowRange, Range colRange)<br>Mat(Mat m, Rect roi)<br>Mat(Size size, int type)<br>Mat(Size size, int type, Scalar s)  </p>
+<p>void create(int rows, int cols, int type)             // 如果尺寸够，则直接返回，否则释放旧的，创建新的<br>void create(Size size, int type) </p>
+<p>属性：<br>int cols()                                              // 矩阵行数<br>int rows()                                             // 矩阵列数<br>int height()                                          // 图片高度 = cols()<br>int width()                                           // 图片宽度 = rows()<br>int dims()                                            // 矩阵维数  &gt;=2<br>int channels()                                      // 矩阵元素通道数 1 或者 3<br>long dataAddr()<br>Size size()<br>int depth()                                             // 元素深度标识<br>long total()<br>int type()<br>long getNativeObjAddr()<br>long elemSize()                                      // 矩阵元素字节数大小 如3 = channels() * elemSize1()<br>long elemSize1()                                    // 矩阵元素每个通路的字节数大小 如1<br>boolean empty()                                   </p>
+<p> long step1()                                          // = 列数 * 通道数<br> long step1(int i) </p>
+<p>// 元素取值赋值<br> int put(int row, int col, byte[] data)<br> int put(int row, int col, double… data)<br> int put(int row, int col, float[] data)<br> int put(int row, int col, int[] data)<br> int put(int row, int col, short[] data) </p>
+<p> double[] get(int row, int col)<br> int get(int row, int col, byte[] data)<br> int get(int row, int col, double[] data)<br> int get(int row, int col, float[] data)<br> int get(int row, int col, int[] data)<br> int get(int row, int col, short[] data) </p>
+<p> Mat setTo(Mat value)                                     // 用另一个Mat赋值<br> Mat setTo(Mat value, Mat mask)<br> Mat setTo(Scalar s)<br> Mat setTo(Scalar value, Mat mask) </p>
+<p> // 子矩阵：<br> Mat submat(int rowStart, int rowEnd, int colStart, int colEnd)<br> Mat submat(Range rowRange, Range colRange)<br> Mat submat(Rect roi) </p>
+<p> boolean isContinuous()<br> boolean isSubmatrix() </p>
+<p> Mat col(int x)<br> Mat row(int y) </p>
+<p> Mat colRange(int startcol, int endcol)<br> Mat colRange(Range r)<br> Mat rowRange(int startrow, int endrow)<br> Mat rowRange(Range r) </p>
+<p>矩阵克隆：<br> Mat clone()<br> void copyTo(Mat m)                              // 给 m 赋值<br> void copyTo(Mat m, Mat mask) </p>
+<p> Mat reshape(int cn)<br> Mat reshape(int cn, int rows) </p>
+<p> void convertTo(Mat m, int rtype)<br> void convertTo(Mat m, int rtype, double alpha)<br> void convertTo(Mat m, int rtype, double alpha, double beta) </p>
+<p> void assignTo(Mat m)<br> void assignTo(Mat m, int type) </p>
+<p>矩阵运算：<br>Mat diag()                                         // 主对角矩阵，一维， 当元素相同时，叫标量阵，当都是1时，是单位阵</p>
+<p>Mat diag(int d)<br>at inv()                                                // 矩阵求逆，非奇异性矩阵可逆<br>Mat inv(int method)<br>Mat cross(Mat m)                               // 两个向量的差乘积<br>Mat mul(Mat m)                                 // 元素层面的乘积计算<br>Mat mul(Mat m, double scale)           // 元素层面的乘积计算， scale, 放大系数<br>double dot(Mat m)                             // 两矩阵点积， 各项乘积的和<br>Mat t()                                                 // 转置 （transpose)</p>
+<p>矩阵转置：<br>矩阵A （m<em>n) 的转置： B(n</em>m) = A^T， 其中，aij = bji。<br>性质： (A+-)^T = A^T +- B^T,   (A<em>B)^T = B^T </em> A^T</p>
+<p> void locateROI(Size wholeSize, Point ofs)<br> Mat adjustROI(int dtop, int om, int dleft, int dright) </p>
+<p>  int checkVector(int elemChannels)<br> int checkVector(int elemChannels, int depth)<br> int checkVector(int elemChannels, int depth, boolean requireContinuous) </p>
+<p> void push_back(Mat m) </p>
+<p>java.lang.String toString()<br>java.lang.String dump()<br> void release() </p>
+<p>Core：<br><a href="http://docs.opencv.org/3.1.0/d2/de8/group__core__array.html#gsc.tab=0" target="_blank" rel="external">http://docs.opencv.org/3.1.0/d2/de8/group__core__array.html#gsc.tab=0</a></p>
+<p>元素运算：<br>static void absdiff(Mat src1, Mat src2, Mat dst)           // 元素级差绝对值<br>static void absdiff(Mat src1, Scalar src2, Mat dst)        // 元素级差绝对值</p>
+<p>static void max(Mat src1, Mat src2, Mat dst)<br>static void max(Mat src1, Scalar src2, Mat dst)<br>static void min(Mat src1, Mat src2, Mat dst)<br>static void min(Mat src1, Scalar src2, Mat dst) </p>
+<p>static void compare(Mat src1, Mat src2, Mat dst, int cmpop)<br>static void compare(Mat src1, Scalar src2, Mat dst, int cmpop) </p>
+<p>static void add(Mat src1, Mat src2, Mat dst)<br>static void add(Mat src1, Mat src2, Mat dst, Mat mask)<br>static void add(Mat src1, Mat src2, Mat dst, Mat mask, int dtype)<br>static void add(Mat src1, Scalar src2, Mat dst)<br>static void add(Mat src1, Scalar src2, Mat dst, Mat mask)<br>static void add(Mat src1, Scalar src2, Mat dst, Mat mask, int dtype) </p>
+<p>伸缩相加<br>static void scaleAdd(Mat src1, double alpha, Mat src2, Mat dst)<br>按权重相加， (src1 <em> alpha + src2 </em> beta + gamma. )<br>static void addWeighted(Mat src1, double alpha, Mat src2, double beta, double gamma, Mat dst)<br>static void addWeighted(Mat src1, double alpha, Mat src2, double beta, double gamma, Mat dst, int dtype) </p>
+<p>static void subtract(Mat src1, Mat src2, Mat dst)<br>static void subtract(Mat src1, Mat src2, Mat dst, Mat mask)<br>static void subtract(Mat src1, Mat src2, Mat dst, Mat mask, int dtype)<br>static void subtract(Mat src1, Scalar src2, Mat dst)<br>static void subtract(Mat src1, Scalar src2, Mat dst, Mat mask)<br>static void subtract(Mat src1, Scalar src2, Mat dst, Mat mask, int dtype) </p>
+<p>static void multiply(Mat src1, Mat src2, Mat dst)                          // 元素级乘法<br>static void multiply(Mat src1, Mat src2, Mat dst, double scale)<br>static void multiply(Mat src1, Mat src2, Mat dst, double scale, int dtype)<br>static void multiply(Mat src1, Scalar src2, Mat dst)<br>static void multiply(Mat src1, Scalar src2, Mat dst, double scale)<br>static void multiply(Mat src1, Scalar src2, Mat dst, double scale, int dtype) </p>
+<p>static void divide(Mat src1, Mat src2, Mat dst)                        // 元素级除法<br>static void divide(Mat src1, Mat src2, Mat dst, double scale)<br>static void divide(Mat src1, Mat src2, Mat dst, double scale, int dtype)<br>static void divide(Mat src1, Scalar src2, Mat dst)<br>static void divide(Mat src1, Scalar src2, Mat dst, double scale)<br>static void divide(Mat src1, Scalar src2, Mat dst, double scale, int dtype)<br>static void divide(double scale, Mat src2, Mat dst)<br>static void divide(double scale, Mat src2, Mat dst, int dtype) </p>
+<p>static void bitwise_and(Mat src1, Mat src2, Mat dst)               // 元素级位操作<br>static void bitwise_and(Mat src1, Mat src2, Mat dst, Mat mask)<br>static void bitwise_not(Mat src, Mat dst)<br>static void bitwise_not(Mat src, Mat dst, Mat mask)<br>static void bitwise_or(Mat src1, Mat src2, Mat dst)<br>static void bitwise_or(Mat src1, Mat src2, Mat dst, Mat mask)<br>static void bitwise_xor(Mat src1, Mat src2, Mat dst)<br>static void bitwise_xor(Mat src1, Mat src2, Mat dst, Mat mask) </p>
+<p>static void cartToPolar(Mat x, Mat y, Mat magnitude, Mat angle)               // x,y 向量长度和夹角<br>static void cartToPolar(Mat x, Mat y, Mat magnitude, Mat angle, boolean angleInDegrees)<br>x,y 向量长度<br>static void magnitude(Mat x, Mat y, Mat magnitude)<br>x,y 向量夹角<br>static void phase(Mat x, Mat y, Mat angle)<br>static void phase(Mat x, Mat y, Mat angle, boolean angleInDegrees) </p>
+<p>极坐标到一般坐标<br>static void polarToCart(Mat magnitude, Mat angle, Mat x, Mat y)<br>static void polarToCart(Mat magnitude, Mat angle, Mat x, Mat y, boolean angleInDegrees) </p>
+<p>平方根，对数，指数，立方根，幂<br>static void sqrt(Mat src, Mat dst)<br>static void log(Mat src, Mat dst)<br>static void exp(Mat src, Mat dst)<br>static float cubeRoot(float val)<br>static void pow(Mat src, double power, Mat dst) </p>
+<p>矩阵合并<br>static void vconcat(java.util.List src, Mat dst)<br>static void hconcat(java.util.List src, Mat dst)<br>static void merge(java.util.List mv, Mat dst) </p>
+<p>矩阵分解<br>static void split(Mat m, java.util.List mv) </p>
+<p>重复<br>static void repeat(Mat src, int ny, int nx, Mat dst) </p>
+<p>矩阵运算</p>
+<p>矩阵对角初始化<br>static void setIdentity(Mat mtx)<br>static void setIdentity(Mat mtx, Scalar s) </p>
+<p>用随机数构造矩阵<br>static void randShuffle(Mat dst)<br>static void randShuffle(Mat dst, double iterFactor)<br>用正态分布的随机数构造矩阵<br>static void randu(Mat dst, double low, double high)<br>static void randn(Mat dst, double mean, double stddev) </p>
+<p>矩阵乘法：<br>static void gemm(Mat src1, Mat src2, double alpha, Mat src3, double beta, Mat dst)<br>static void gemm(Mat src1, Mat src2, double alpha, Mat src3, double beta, Mat dst, int flags) </p>
+<p>行列式因子：<br>static double determinant(Mat mtx) </p>
+<p>矩阵转换<br>static void transform(Mat src, Mat dst, Mat m) </p>
+<p>矩阵转置<br>static void transpose(Mat src, Mat dst) </p>
+<p>逆矩阵<br>static double invert(Mat src, Mat dst)<br>static double invert(Mat src, Mat dst, int flags) </p>
+<p>计算 马哈拉诺比斯距离  距离<br>static double Mahalanobis(Mat v1, Mat v2, Mat icovar) </p>
+<p>矩阵对角元素和<br>static Scalar trace(Mat mtx) </p>
+<p>一个矩阵是否在另两个矩阵之间<br>static void inRange(Mat src, Scalar lowerb, Scalar upperb, Mat dst) </p>
+<p>// 范数<br>// Core.NORM_INF    绝对值最大<br>// Core.NORM_L1     绝对值值和<br>// Core.NORM_L2     绝对值平方和开方<br>static double norm(Mat src1)<br>static double norm(Mat src1, int normType)<br>static double norm(Mat src1, int normType, Mat mask)<br>static double norm(Mat src1, Mat src2)<br>static double norm(Mat src1, Mat src2, int normType)<br>static double norm(Mat src1, Mat src2, int normType, Mat mask) </p>
+<p>static void normalize(Mat src, Mat dst)<br>static void normalize(Mat src, Mat dst, double alpha, double beta, int norm_type)<br>static void normalize(Mat src, Mat dst, double alpha, double beta, int norm_type, int dtype)<br>static void normalize(Mat src, Mat dst, double alpha, double beta, int norm_type, int dtype, Mat mask) </p>
+<p>计算矩阵和转置矩阵乘积<br>static void mulTransposed(Mat src, Mat dst, boolean aTa)<br>static void mulTransposed(Mat src, Mat dst, boolean aTa, Mat delta, double scale)<br>static void mulTransposed(Mat src, Mat dst, boolean aTa, Mat delta, double scale, int dtype) </p>
+<p>本征值及特征向量<br>static boolean eigen(Mat src, Mat eigenvalues)<br>static boolean eigen(Mat src, Mat eigenvalues, Mat eigenvectors) </p>
+<p>均值<br>static Scalar mean(Mat src)                     // 计算均值<br>static Scalar mean(Mat src, Mat mask)    // 计算均值<br>static void meanStdDev(Mat src, MatOfDouble mean, MatOfDouble stddev)   // 计算均值和标准差<br>static void meanStdDev(Mat src, MatOfDouble mean, MatOfDouble stddev, Mat mask)   // 计算均值和</p>
+<p>简单最近邻查找器<br>static void batchDistance(Mat src1, Mat src2, Mat dist, int dtype, Mat nidx)<br>static void batchDistance(Mat src1, Mat src2, Mat dist, int dtype, Mat nidx, int normType, int K)<br>static void batchDistance(Mat src1, Mat src2, Mat dist, int dtype, Mat nidx, int normType, int K, Mat<br>mask, int update, boolean crosscheck) </p>
+<p>static int borderInterpolate(int p, int len, int borderType)<br>计算协方差矩阵<br>static void calcCovarMatrix(Mat samples, Mat covar, Mat mean, int flags)<br>static void calcCovarMatrix(Mat samples, Mat covar, Mat mean, int flags, int ctype) </p>
+<p>透视变换<br>static void perspectiveTransform(Mat src, Mat dst, Mat m) </p>
+<p>static boolean checkRange(Mat a)<br>static boolean checkRange(Mat a, boolean quiet, double minVal, double maxVal)<br>static void completeSymm(Mat mtx)<br>static void completeSymm(Mat mtx, boolean lowerToUpper)<br>static void convertScaleAbs(Mat src, Mat dst)<br>static void convertScaleAbs(Mat src, Mat dst, double alpha, double beta)<br>static void copyMakeBorder(Mat src, Mat dst, int top, int bottom, int left, int right, int borderType)<br>static void copyMakeBorder(Mat src, Mat dst, int top, int bottom, int left, int right, int borderType, Scalar value)<br>static int countNonZero(Mat src) </p>
+<p>正向或反向余弦变换<br>static void dct(Mat src, Mat dst)<br>static void dct(Mat src, Mat dst, int flags)<br>反向离散正弦变换<br>static void idct(Mat src, Mat dst)<br>static void idct(Mat src, Mat dst, int flags) </p>
+<p>离散傅里叶变换<br>static void dft(Mat src, Mat dst)<br>static void dft(Mat src, Mat dst, int flags, int nonzeroRows)<br>static int getOptimalDFTSize(int vecsize) </p>
+<p>反向离散傅里叶变换<br>static void idft(Mat src, Mat dst)<br>static void idft(Mat src, Mat dst, int flags, int nonzeroRows) </p>
+<p>元素傅里叶谱乘积<br>static void mulSpectrums(Mat a, Mat b, Mat c, int flags)<br>static void mulSpectrums(Mat a, Mat b, Mat c, int flags, boolean conjB) </p>
+<p>static void extractChannel(Mat src, Mat dst, int coi)<br>static float fastAtan2(float y, float x)<br>static void findNonZero(Mat src, Mat idx)<br>static void flip(Mat src, Mat dst, int flipCode) </p>
+<p>把矩阵转成向量<br>static void reduce(Mat src, Mat dst, int dim, int rtype)<br>static void reduce(Mat src, Mat dst, int dim, int rtype, int dtype) </p>
+<p>线性方程组求解<br>static boolean solve(Mat src1, Mat src2, Mat dst)<br>static boolean solve(Mat src1, Mat src2, Mat dst, int flags)<br>static int solveCubic(Mat coeffs, Mat roots)<br>static double solvePoly(Mat coeffs, Mat roots)<br>static double solvePoly(Mat coeffs, Mat roots, int maxIters) </p>
+<p>计算机相关<br>static java.lang.String getBuildInformation()<br>static long getCPUTickCount()<br>static int getNumberOfCPUs()<br>static long getTickCount()<br>static double getTickFrequency() </p>
+<p>static void insertChannel(Mat src, Mat dst, int coi) </p>
+<p>K均值<br>static double kmeans(Mat data, int K, Mat bestLabels, TermCriteria criteria, int attempts, int flags)<br>static double kmeans(Mat data, int K, Mat bestLabels, TermCriteria criteria, int attempts, int flags, Mat centers) </p>
+<p>计算 SVD  Singular Value Decomposition<br>static void SVBackSubst(Mat w, Mat u, Mat vt, Mat rhs, Mat dst)<br>static void SVDecomp(Mat src, Mat w, Mat u, Mat vt)<br>static void SVDecomp(Mat src, Mat w, Mat u, Mat vt, int flags) </p>
+<p>排序<br>static void sort(Mat src, Mat dst, int flags)<br>static void sortIdx(Mat src, Mat dst, int flags) </p>
+<p>查找表 Look Up Table<br>static void LUT(Mat src, Mat lut, Mat dst) </p>
+<p>static Core.MinMaxLocResult minMaxLoc(Mat src)<br>static Core.MinMaxLocResult minMaxLoc(Mat src, Mat mask)<br>static void mixChannels(java.util.List src, java.util.List dst, MatOfInt fromTo)<br>static void patchNaNs(Mat a)<br>static void patchNaNs(Mat a, double val)<br>static void PCABackProject(Mat data, Mat mean, Mat eigenvectors, Mat result)<br>static void PCACompute(Mat data, Mat mean, Mat eigenvectors)<br>static void PCACompute(Mat data, Mat mean, Mat eigenvectors, double retainedVariance)<br>static void PCACompute(Mat data, Mat mean, Mat eigenvectors, int maxComponents)<br>static void PCAProject(Mat data, Mat mean, Mat eigenvectors, Mat result)<br>static double PSNR(Mat src1, Mat src2)<br>static void setErrorVerbosity(boolean verbose)<br>static Scalar sumElems(Mat src) </p>
+<p>Mat 与 Java类型之间转换<br>org.opencv.utils.Converters<br>static void Mat_to_vector_char(Mat m, java.util.List bs)<br>static void Mat_to_vector_DMatch(Mat m, java.util.List matches)<br>static void Mat_to_vector_double(Mat m, java.util.List ds)<br>static void Mat_to_vector_float(Mat m, java.util.List fs)<br>static void Mat_to_vector_int(Mat m, java.util.List is)<br>static void Mat_to_vector_KeyPoint(Mat m, java.util.List kps)<br>static void Mat_to_vector_Mat(Mat m, java.util.List mats)<br>static void Mat_to_vector_Point(Mat m, java.util.List pts)<br>static void Mat_to_vector_Point2d(Mat m, java.util.List pts)<br>static void Mat_to_vector_Point2f(Mat m, java.util.List pts)<br>static void Mat_to_vector_Point3(Mat m, java.util.List pts)<br>static void Mat_to_vector_Point3d(Mat m, java.util.List pts)<br>static void Mat_to_vector_Point3f(Mat m, java.util.List pts)<br>static void Mat_to_vector_Point3i(Mat m, java.util.List pts)<br>static void Mat_to_vector_Rect(Mat m, java.util.List rs)<br>static void Mat_to_vector_uchar(Mat m, java.util.List us)<br>static void Mat_to_vector_vector_char(Mat m, java.util.List&gt; llb)<br>static void Mat_to_vector_vector_DMatch(Mat m, java.util.List lvdm)<br>static void Mat_to_vector_vector_KeyPoint(Mat m, java.util.List kps)<br>static void Mat_to_vector_vector_Point(Mat m, java.util.List pts)<br>static void Mat_to_vector_vector_Point2f(Mat m, java.util.List pts)<br>static void Mat_to_vector_vector_Point3f(Mat m, java.util.List pts)<br>static Mat vector_char_to_Mat(java.util.List bs)<br>static Mat vector_DMatch_to_Mat(java.util.List matches)<br>static Mat vector_double_to_Mat(java.util.List ds)<br>static Mat vector_float_to_Mat(java.util.List fs)<br>static Mat vector_int_to_Mat(java.util.List is)<br>static Mat vector_KeyPoint_to_Mat(java.util.List kps)<br>static Mat vector_Mat_to_Mat(java.util.List mats)<br>static Mat vector_Point_to_Mat(java.util.List pts)<br>static Mat vector_Point_to_Mat(java.util.List pts, int typeDepth)<br>static Mat vector_Point2d_to_Mat(java.util.List pts)<br>static Mat vector_Point2f_to_Mat(java.util.List pts)<br>static Mat vector_Point3_to_Mat(java.util.List pts, int typeDepth)<br>static Mat vector_Point3d_to_Mat(java.util.List pts)<br>static Mat vector_Point3f_to_Mat(java.util.List pts)<br>static Mat vector_Point3i_to_Mat(java.util.List pts)<br>static Mat vector_Rect_to_Mat(java.util.List rs)<br>static Mat vector_uchar_to_Mat(java.util.List bs)<br>static Mat vector_vector_char_to_Mat(java.util.List lvb, java.util.List mats)<br>static Mat vector_vector_DMatch_to_Mat(java.util.List lvdm, java.util.List mats)<br>static Mat vector_vector_KeyPoint_to_Mat(java.util.List kps, java.util.List mats)<br>static Mat vector_vector_Point_to_Mat(java.util.List pts, java.util.List mats)<br>static Mat vector_vector_Point2f_to_Mat(java.util.List pts, java.util.List mats)<br>static Mat vector_vector_Point3f_to_Mat(java.util.List pts, java.util.List mats)</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/06/04/scala-opencv/" data-id="cip0wskhi0004u1jqx8r3bnjp" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/06/04/scala-opencv/" data-id="cip0xgffo0004zbjqflhyiote" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -126,9 +203,9 @@ cd build</code><br>4.配置config<br><code>cmake -D CMAKE_BUILD_TYPE=RELEASE -D 
 <nav id="article-nav">
   
   
-    <a href="/2016/06/03/Ubuntu-install-Note/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">安装命令</div>
+    <a href="/2016/06/03/Markdown-Note/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ancien</strong>
+      <div class="article-nav-title">Markdown Note</div>
     </a>
   
 </nav>
@@ -160,7 +237,7 @@ cd build</code><br>4.配置config<br><code>cmake -D CMAKE_BUILD_TYPE=RELEASE -D 
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
         
@@ -169,11 +246,11 @@ cd build</code><br>4.配置config<br><code>cmake -D CMAKE_BUILD_TYPE=RELEASE -D 
           </li>
         
           <li>
-            <a href="/2016/06/03/Ubuntu-install-Note/">安装命令</a>
+            <a href="/2016/06/03/Markdown-Note/">Markdown Note</a>
           </li>
         
           <li>
-            <a href="/2016/06/03/Markdown-Note/">Markdown Note</a>
+            <a href="/2016/06/03/Ubuntu-install-Note/">安装命令</a>
           </li>
         
           <li>
@@ -197,7 +274,7 @@ cd build</code><br>4.配置config<br><code>cmake -D CMAKE_BUILD_TYPE=RELEASE -D 
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2016 John Doe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
