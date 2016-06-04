@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>scala-opencv | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="OS:Ubuntu 14.04
+1.安装以来软件sudo apt-get install build-essential python-dev cmake ant
+2.到opencv（http://opencv.org/）下载源文件3.新建一个build文件夹cd ~/opencv 
+mkdir build 
+cd build4.配置configcmake -D CMAKE_BUILD_TYPE=">
+<meta property="og:type" content="article">
+<meta property="og:title" content="scala-opencv">
+<meta property="og:url" content="http://yoursite.com/2016/06/04/scala-opencv/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="OS:Ubuntu 14.04
+1.安装以来软件sudo apt-get install build-essential python-dev cmake ant
+2.到opencv（http://opencv.org/）下载源文件3.新建一个build文件夹cd ~/opencv 
+mkdir build 
+cd build4.配置configcmake -D CMAKE_BUILD_TYPE=">
+<meta property="og:updated_time" content="2016-06-04T08:53:14.279Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="scala-opencv">
+<meta name="twitter:description" content="OS:Ubuntu 14.04
+1.安装以来软件sudo apt-get install build-essential python-dev cmake ant
+2.到opencv（http://opencv.org/）下载源文件3.新建一个build文件夹cd ~/opencv 
+mkdir build 
+cd build4.配置configcmake -D CMAKE_BUILD_TYPE=">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-scala-opencv" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/06/04/scala-opencv/" class="article-date">
+  <time datetime="2016-06-04T08:36:50.000Z" itemprop="datePublished">2016-06-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      scala-opencv
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>OS:Ubuntu 14.04</p>
+<p>1.安装以来软件<br><code>sudo apt-get install build-essential python-dev cmake ant</code></p>
+<p>2.到opencv（<a href="http://opencv.org/）下载源文件" target="_blank" rel="external">http://opencv.org/）下载源文件</a><br>3.新建一个build文件夹<br><code>cd ~/opencv 
+mkdir build 
+cd build</code><br>4.配置config<br><code>cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -DBUILD_TESTS=OFF ..</code></p>
+<p>5.make -j8<br>6.sudo make install<br>7.在build/bin目录下有opencv-2413.jar文件夹和在build/lib文件夹下有opencv_2413.so文件。</p>
+<p>（1）创建矩阵<br>OpenCV Java中矩阵就是一个类 Mat，和它扩展出来的MatOfDouble之类的类。通常创建一个矩阵对象的方法是：<br><code>Mat A = new Mat(3, 4, CvType.CV_64FC1);</code><br>或者分两步：<br>Mat A = new Mat();<br>A.create(3,4,CvType.CV_64FC1);<br>矩阵使用完毕不用了，要记得销毁：<br>A.release();<br>另外还有些特殊矩阵的创建方法，这个文档里倒是有，大家可以看看。这些方法一般是静态方法，可以通过类来调用。例如：<br>A = Mat.eye(3,3, CvType.CV_64FC1);<br>A = Mat.zero(3,3,CvType.CV_64FC1);<br>诸如MatOfDouble之类的矩阵，还支持将矩阵转换为List或者从List（array）转换成矩阵。所以可以直接这样创建矩阵：<br>MatOfDouble A = new MatOfDouble(1,2,3,4,5,6,7,8,9);<br>或者<br>MatOfDouble A = new MatOfDouble();<br>A.fromArray(1,2,3,4,5,6,7,8,9);<br>注意，这样得到的矩阵实际上是一个列向量，也就是9<em>1的矩阵。如果想得到一个3</em>3的矩阵，可以用reshape，<br>A.reshape(1,3);<br>reshape这个方法的参数是很坑爹的，我好长时间都以为参数是行和列，后来翻文档才发现，第一个参数是通道数，第二参数是行数。不怪别人，是我自己想当然了。<br>另外，Mat还有一个方法是获得矩阵尺寸的，size()。该方法也十分坑爹，返回值居然是列<em>行。比方说上面那个矩阵A,<br>System.out.println(A.size().toString());<br>结果是1x9。<br>(2) 对矩阵进行操作是很简单的，因为OpenCV有专门的方法，其他的不说了，有一个特别要命，主要是Java开发人员特别要小心的，就是矩阵的乘法。对于C++开发者而言，矩阵乘法可以直接用</em>搞定，例如A=B<em>C。Java语言是不支持运算符重载的，因此也就不可能用这么简单的形式实现，只能用方法实现。<br>不过你找javadoc的时候会发现，Mat类里也提供了multi的方法，哈哈……且慢欢喜，这个不是我们说的矩阵乘法，而是矩阵对应元素的乘法，真正的矩阵乘法在Core类里，需要用Core.gemm()的形式调用。我写了一个简单那的函数实现了简单的矩阵乘法：<br>/*</em></p>
+<ul>
+<li>计算矩阵A和B的乘，得到新的矩阵C。即 C=A*B；</li>
+<li>注意：A,B,C调用前必需要初始化完毕。</li>
+<li>@param A 被乘矩阵</li>
+<li>@param B 乘矩阵</li>
+<li>@param C 结果矩阵</li>
+<li>@return 矩阵C<br><em>/<br>public Mat matMul(Mat A, Mat B, Mat C)<br>{<br>Core.gemm(A, B, 1.0, Mat.zeros(A.size(), A.type()), 0.0, C);<br>return C;<br>}<br>这个方法是有文档的，不说啥了，目前还没有找到其他更好的方法。注意Mat类里还有dot()方法和cross()方法，都是给向量准备的，一个点乘，一个叉乘，其中叉乘还只能是三元素的向量。<br>(3) Java矩阵类的粗浅解析<br>我的理解Java矩阵实际上是两个部分。一个部分是Java的矩阵说明，包括尺寸，通道数，数据类型等；另一部分是实际存储数据的区域，在Java中这部分应该是用JNI调用其C++版本里的功能实现的，所以需要create和release。因此在做矩阵复制，赋值，转换等的各种操作的时候，有的时候是完整的创建了一个新的对象，有的时候只是创建了一个Java头，数据仍然存储在原来的地方没动，所以就有可能我们创建了好多个Mat对象，而实际存储的区域可能没那么多，会有多个Mat对象引用同一块数据存储区域。release方法实际上内部也有一个类似计数的变量，每次调用release的时候就会将这个变量减一，用这种方法来保证在合适的时候释放内存。所以这么说适时的调用release还是很重要的。但实际上什么时候应该release确实是个难题。我感觉一个标准是，谁new的对象，谁就负责release。在函数内部创建的矩阵对象，当做返回值的，必须要告诉调用者去release。<br>（4）矩阵元素的读取和存储<br>Java里读取矩阵的元素和改变某位置元素的值非常麻烦。对于C++而言，A(0,0)就可以直接取出（0,0）的值，同时也可以直接赋值。Java专门有这么两个方法，就是put()和get()。例如：<br>double[] x = A.get(0, 0)<br>这个操作可以获得（0,0）位置上的元素的值。为什么是返回的数组呢？因为OpenCV的矩阵可以是多维的，也就是在（0,0）位置上的值可以有多个通道（典型的例子是图像，其元素可能是3个值的数组（R,G,B)或者4个值的数组），所以返回值是数组。对于单通道的数据类型的矩阵而言，x[0]就是它的值。<br>A.put(0, 0, 1.0)<br>这个操作将（0,0）的值设置为1.0。当然本之上也应该是一个数组的，因为这里Java定义为可变数量参数，所以也可以只输入一个1.0。<br>但是这样的操作太麻烦了，大家可以想象一下最简单的常用的4</em>3矩阵如果这么赋起值来，那出错的概率是杠杠的。<br>还有一个办法就是把矩阵先转换为数组，然后进行操作，操作完毕后再转换会矩阵。也就是用数组作为中转，因为Java中操作数组还是很容易的。<br>Mat没有提供一个专为数组的方法，只能自己写一个了。其实也很简单，还是用的上面的两个方法。<br>double[] value = new double[9];<br>A.get(0,0, value); //从（0,0）位置开始读取数据来填充数组，一直到数组满或者矩阵结尾<br>或者<br>double[] value = new double[]{1,2,3,4,5,6,7,8,9};<br>A.put(0,0,value); //从（0,0）位置开始填充数组里的数据，一直到数组结束<br>很方便吧。注意计算好数组的大小。用这种方法也可以修改矩阵的部分数据。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/06/04/scala-opencv/" data-id="cip0wskhi0004u1jqx8r3bnjp" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/06/03/Ubuntu-install-Note/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">安装命令</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/06/04/scala-opencv/">scala-opencv</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/03/Ubuntu-install-Note/">安装命令</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/03/Markdown-Note/">Markdown Note</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/03/First-Post/">First Post</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
